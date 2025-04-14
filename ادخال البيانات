@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تسجيل الأطباء / Doctor Registration</title>
+  <style>
+    body {
+      direction: rtl;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f7f7f7;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      border-radius: 5px;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+    }
+    input[type="text"],
+    input[type="tel"] {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      padding: 10px 20px;
+      margin-top: 20px;
+      border: none;
+      background-color: #28a745;
+      color: #fff;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    .lang-toggle {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="lang-toggle">
+      <button id="toggleLang">Switch to English</button>
+    </div>
+    
+    <h2 id="formTitle">تسجيل الطبيب</h2>
+    <form id="doctorForm">
+      <label id="labelFullName">الاسم الثلاثي:</label>
+      <input type="text" id="fullName" required>
+
+      <label id="labelClinicName">اسم العيادة:</label>
+      <input type="text" id="clinicName" required>
+
+      <label id="labelClinicLocation">موقع العيادة:</label>
+      <input type="text" id="clinicLocation" required>
+
+      <label id="labelPhoneNumber">رقم الهاتف (مثال: +9627XXXXXXXX):</label>
+      <input type="tel" id="phoneNumber" required>
+
+      <label id="labelSpecialty">نوع التخصص (اختياري):</label>
+      <input type="text" id="specialty">
+
+      <button type="button" id="submitButton" onclick="submitForm()">تسجيل</button>
+    </form>
+  </div>
+
+  <script>
+    // ===== إعداد متغيرات الربط =====
+    // استبدل هذا الرابط برابط Google Apps Script الخاص بك (Web App URL)
+    const scriptURL = 'YOUR_GOOGLE_SCRIPT_WEB_APP_URL';
+    // الرقم الثابت (المرسل) الذي يجب استخدامه في رسائل واتساب: +962780818197
+    const senderNumber = "+962780818197";
+
+    // ===== إعداد النصوص للغتين =====
+    const texts = {
+      ar: {
+        formTitle: "تسجيل الطبيب",
+        labelFullName: "الاسم الثلاثي:",
+        labelClinicName: "اسم العيادة:",
+        labelClinicLocation: "موقع العيادة:",
+        labelPhoneNumber: "رقم الهاتف (مثال: +9627XXXXXXXX):",
+        labelSpecialty: "نوع التخصص (اختياري):",
+        submitButton: "تسجيل",
+        alertFill: "يرجى تعبئة جميع الحقول المطلوبة.",
+        alertPhone: "رقم الهاتف يجب أن يبدأ بـ +962",
+        errorMsg: "حدث خطأ أثناء التسجيل. حاول مرة أخرى.",
+        thankYouMsg: "شكرًا لك {name} على تسجيلك معنا.\n\nتم تسجيل عيادتك ({clinic}) بنجاح.\nالموقع: {location}{specialty}"
+      },
+      en: {
+        formTitle: "Doctor Registration",
+        labelFullName: "Full Name:",
+        labelClinicName: "Clinic Name:",
+        labelClinicLocation: "Clinic Location:",
+        labelPhoneNumber: "Phone Number (e.g., +9627XXXXXXXX):",
+        labelSpecialty: "Specialty (optional):",
+        submitButton: "Register",
+        alertFill: "Please fill in all required fields.",
+        alertPhone: "Phone number must start with +962",
+        errorMsg: "An error occurred. Please try again.",
+        thankYouMsg: "Thank you {name} for registering with us.\n\nYour clinic ({clinic}) has been successfully registered.\nLocation: {location}{specialty}"
+      }
+    };
+
+    let currentLang = "ar"; // اللغة الافتراضية
+
+    // ===== تغيير لغة الواجهة =====
+    const toggleLangButton = document.getElementById("toggleLang");
+    toggleLangButton.addEventListener("click", () => {
+      if(currentLang === "ar") {
+        currentLang = "en";
+        document.documentElement.setAttribute("lang", "en");
+        document.body.style.direction = "ltr";
+        toggleLangButton.textContent = "Switch to Arabic";
+      } else {
+        currentLang = "ar";
+        document.documentElement.setAttribute("lang", "ar");
+        document.body.style.direction = "rtl";
+        toggleLangButton.textContent = "Switch to English";
+      }
+      updateText();
+    });
+
+    function updateText() {
+      document.getElementById("formTitle").textContent = texts[currentLang].formTitle;
+      document.getElementById("labelFullName").textContent = texts[currentLang].labelFullName;
+      document.getElementById("labelClinicName").textContent = texts[currentLang].labelClinicName;
+      document.getElementById("labelClinicLocation").textContent = texts[currentLang].labelClinicLocation;
+      document.getElementById("labelPhoneNumber").textContent = texts[currentLang].labelPhoneNumber;
+      document.getElementById("labelSpecialty").textContent = texts[currentLang].labelSpecialty;
+      document.getElementById("submitButton").textContent = texts[currentLang].submitButton;
+    }
+
+    // ===== دالة التقديم =====
+    function submitForm(){
+      const fullName = document.getElementById("fullName").value.trim();
+      const clinicName = document.getElementById("clinicName").value.trim();
+      const clinicLocation = document.getElementById("clinicLocation").value.trim();
+      const phoneNumber = document.getElementById("phoneNumber").value.trim();
+      const specialty = document.getElementById("specialty").value.trim();
+
+      // التحقق من تعبئة الحقول المطلوبة
+      if (!fullName || !clinicName || !clinicLocation || !phoneNumber) {
+        alert(texts[currentLang].alertFill);
+        return;
+      }
+
+      // التحقق من صحة رقم الهاتف (يجب أن يبدأ بـ +962)
+      if (!phoneNumber.startsWith("+962")) {
+        alert(texts[currentLang].alertPhone);
+        return;
+      }
+
+      // تجهيز البيانات للإرسال إلى Google Sheets
+      const data = {
+        fullName,
+        clinicName,
+        clinicLocation,
+        phoneNumber,
+        specialty
+      };
+
+      fetch(scriptURL, {
+        method: "POST",
+        body: JSON.stringify(data)
+      })
+      .then(response => response.text())
+      .then(result => {
+        console.log("Success:", result);
+        // بعد تخزين البيانات، فتح رابط واتساب مع رسالة الشكر
+        sendWhatsAppMessage(fullName, clinicName, clinicLocation, specialty, phoneNumber);
+      })
+      .catch(error => {
+        console.error("Error:", error);
+        alert(texts[currentLang].errorMsg);
+      });
+    }
+
+    // ===== دالة إرسال رسالة واتساب =====
+    function sendWhatsAppMessage(fullName, clinicName, clinicLocation, specialty, recipientNumber){
+      // تحضير رسالة الشكر مع استبدال المتغيرات
+      let messageTemplate = texts[currentLang].thankYouMsg;
+      let specialtyText = specialty ? (currentLang === "ar" ? "\nالتخصص: " + specialty : "\nSpecialty: " + specialty) : "";
+      let message = messageTemplate
+                      .replace("{name}", fullName)
+                      .replace("{clinic}", clinicName)
+                      .replace("{location}", clinicLocation)
+                      .replace("{specialty}", specialtyText);
+
+      // يتم فتح نافذة واتساب للرقم المُدخل مع الرسالة الجاهزة.
+      // ملاحظة: لا يمكن تحديد رقم المرسل عبر الرابط، بل يتم ذلك من إعدادات حساب واتساب للأعمال.
+      const url = `https://wa.me/${recipientNumber}?text=${encodeURIComponent(message)}`;
+      window.open(url, "_blank");
+    }
+  </script>
+</body>
+</html>
