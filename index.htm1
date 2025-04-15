@@ -79,7 +79,7 @@
 
   <script>
     // قم باستبدال القيمة التالية برابط Google Apps Script (Web App) الخاص بك
-    const scriptURL = 'https://docs.google.com/spreadsheets/d/1Q_ZcjJVZe-AZwQBUwp-d96TLd7Z1SHpeExXM81AnTpw/edit?usp=sharing';
+    const scriptURL = 'https://script.google.com/macros/s/AKfycby9xdIvH39c88YWNagINAWXenk-3Pq5qrcLEnGHj6rC3AVjmwUxTwe4JazzcJvQq6oF/exec';
 
     // الرقم الثابت (المُرسل) المطلوب: +962780818197
     // ملاحظة: لا يمكن تحديد "رقم المرسل" عبر رابط واتساب من جهة العميل
