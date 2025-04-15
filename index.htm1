@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تسجيل الأطباء / Doctor Registration</title>
+  <style>
+    body {
+      direction: rtl;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      background-color: #f7f7f7;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      border-radius: 5px;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+    }
+    input[type="text"],
+    input[type="tel"] {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      padding: 10px 20px;
+      margin-top: 20px;
+      border: none;
+      background-color: #28a745;
+      color: #fff;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #218838;
+    }
+    .lang-toggle {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="lang-toggle">
+      <button id="toggleLang">Switch to English</button>
+    </div>
+    
+    <h2 id="formTitle">تسجيل الطبيب</h2>
+    <form id="doctorForm">
+      <label id="labelFullName">الاسم الثلاثي:</label>
+      <input type="text" id="fullName" required>
+
+      <label id="labelClinicName">اسم العيادة:</label>
+      <input type="text" id="clinicName" required>
+
+      <label id="labelClinicLocation">موقع العيادة:</label>
+      <input type="text" id="clinicLocation" required>
+
+      <label id="labelPhoneNumber">رقم الهاتف (مثال: +9627XXXXXXXX):</label>
+      <input type="tel" id="phoneNumber" required>
+
+      <label id="labelSpecialty">نوع التخصص (اختياري):</label>
+      <input type="text" id="specialty">
+
+      <button type="button" id="submitButton" onclick="submitForm()">تسجيل</button>
+    </form>
+  </div>
+
+  <script>
+    // قم باستبدال القيمة التالية برابط Google Apps Script (Web App) الخاص بك
+    const scriptURL = 'https://docs.google.com/spreadsheets/d/1Q_ZcjJVZe-AZwQBUwp-d96TLd7Z1SHpeExXM81AnTpw/edit?usp=sharing';
+
+    // الرقم الثابت (المُرسل) المطلوب: +962780818197
+    // ملاحظة: لا يمكن تحديد "رقم المرسل" عبر رابط واتساب من جهة العميل
+    // الرسالة تُفتح في المحادثة مع الرقم المُدخل من قبل المستخدم.
+    const senderNumber = "+962780818197";
+
+    // إعداد النصوص للغتين العربية والإنجليزية
+    const texts = {
+      ar: {
+        formTitle: "تسجيل الطبيب",
+        labelFullName: "الاسم الثلاثي:",
+        labelClinicName: "اسم العيادة:",
+        labelClinicLocation: "موقع العيادة:",
+        labelPhoneNumber: "رقم الهاتف (مثال: +9627XXXXXXXX):",
+        labelSpecialty: "نوع التخصص (اختياري):",
+        submitButton: "تسجيل",
+        alertFill: "يرجى تعبئة جميع الحقول المطلوبة.",
+        alertPhone: "رقم الهاتف يجب أن يبدأ بـ +962",
+        errorMsg: "حدث خطأ أثناء التسجيل. حاول مرة أخرى.",
+        thankYouMsg: "شكرًا لك {name} على تسجيلك معنا.\n\nتم تسجيل عيادتك ({clinic}) بنجاح.\nالموقع: {location}{specialty}"
+      },
+      en: {
+        formTitle: "Doctor Registration",
+        labelFullName: "Full Name:",
+        labelClinicName: "Clinic Name:",
+        labelClinicLocation: "Clinic Location:",
+        labelPhoneNumber: "Phone Number (e.g., +9627XXXXXXXX):",
+        labelSpecialty: "Specialty (optional):",
+        submitButton: "Register",
+        alertFill: "Please fill in all required fields.",
+        alertPhone: "Phone number must start with +962",
+        errorMsg: "An error occurred. Please try again.",
+        thankYouMsg: "Thank you {name} for registering with us.\n\nYour clinic ({clinic}) has been successfully registered.\nLocation: {location}{specialty}"
+      }
+    };
+
+    let currentLang = "ar"; // اللغة الافتراضية
+    const toggleLangButton = document.getElementById(…
